@@ -1,0 +1,25 @@
+
+body {
+    margin: 0px;
+    background: #555555;
+}
+
+#activity {
+	position: fixed;
+	right: 4px;
+	bottom: 2px;
+	font-family: sans-serif;
+	font-size: 16px;
+	color: #aaaaaa;
+	text-align: right;
+}
+#random {
+	position: fixed;
+	left: 4px;
+	bottom: 2px;
+	font-family: sans-serif;
+	font-size: 16px;
+	color: white;
+}
+
+
