@@ -120,6 +120,7 @@ function render() {
     if (op == undefined) {
         if (ops.length == 0) {
             document.getElementById("activity").innerHTML = "done";
+            document.getElementById("activity").style.color = "#00FF00";
             canvas.style.display = "none";
             img.style.display = "inline";
             img.src = canvas.toDataURL();
