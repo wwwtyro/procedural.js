@@ -132,8 +132,8 @@ NebulaRenderer.prototype.recursiveField = function(x, y, depth, divisor) {
     if (depth == 0) {
         return this.pn.noise(x / divisor, y / divisor, 0);
     }
-    return this.pn.noise(x / divisor + this.recursiveField(x, y, depth - 1, divisor / 2),
-        y / divisor + this.recursiveField(x, y, depth - 1, divisor / 2), 0);
+    var displace = this.recursiveField(x, y, depth - 1, divisor / 2);
+    return this.pn.noise(x / divisor + displace, y / divisor + displace, 0);
 }
 
 NebulaRenderer.prototype.field = function(r, g, b, x, y, intensity, falloff) {
