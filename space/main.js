@@ -29,18 +29,27 @@ function init() {
         nebula: nebula
     }
     window.onresize = onResize;
+    document.getElementById("random").onclick = randomize;
+}
+
+function randomize() {
+    window.location = "./#" + JSON.stringify({
+        width: params.width,
+        height: params.height
+    });
+    window.location.reload();
 }
 
 function onResize() {
     if (window.innerWidth / window.innerHeight < canvas.width / canvas.height) {
-        var w = window.innerWidth - 64;
+        var w = window.innerWidth - 128;
         var h = w / (canvas.width / canvas.height);
         img.style.width = "" + w + "px";
         img.style.height = "" + h + "px";
         img.style.top = window.innerHeight / 2 - h / 2;
         img.style.left = window.innerWidth / 2 - w / 2;
     } else {
-        var h = window.innerHeight - 64;
+        var h = window.innerHeight - 128;
         var w = h / (canvas.height / canvas.width);
         img.style.width = "" + w + "px";
         img.style.height = "" + h + "px";
@@ -57,10 +66,12 @@ function onResize() {
     canvas.style.boxShadow = img.style.boxShadow;
 }
 
+
 function doParams() {
     params = {};
     try {
-        params = JSON.parse(window.location.hash.replace("#", ""));
+        var hash = decodeURIComponent(window.location.hash);
+        params = JSON.parse(hash.replace("#", ""));
     } catch (err) {
         console.log("Failed to parse url hash. Using defaults.");
     }
