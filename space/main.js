@@ -1,15 +1,20 @@
-var canvas, ops = [],
+var ops = [],
     op, opMap, scale,
-    params, img;
+    params;
+
+var canvas, img;
+
+function createElements() {
+    canvas = rgbaCanvas(params.width, params.height, 0, 0, 0, 1);
+    img = document.createElement("img");
+    document.getElementById("render container").appendChild(img);
+    document.getElementById("render container").appendChild(canvas);
+}
 
 function init() {
     doParams();
-    canvas = rgbaCanvas(params.width, params.height, 0, 0, 0, 1);
-    img = document.createElement("img");
-    document.body.appendChild(img);
-    document.body.appendChild(canvas);
+    createElements();
     img.style.display = "none";
-    onResize();
     scale = Math.max(canvas.width, canvas.height);
     field();
     Math.random = Alea(params.seed);
@@ -28,9 +33,9 @@ function init() {
         sun: sun,
         nebula: nebula
     }
-    window.onresize = onResize;
+    window.onresize = reflow;
     document.getElementById("random").onclick = randomize;
-    onResize();
+    reflow();
 }
 
 function randomize() {
@@ -41,20 +46,25 @@ function randomize() {
     window.location.reload();
 }
 
-function onResize() {
+function reflow() {
     var parent = canvas.parentNode;
-    var scalew = (parent.offsetWidth - 64) / canvas.width;
-    var scaleh = (parent.offsetHeight - 64) / canvas.height;
+    parent.style.position = "fixed";
+    parent.style.top = 0;
+    parent.style.right = 0;
+    parent.style.width = document.body.offsetWidth - document.getElementById("controls").offsetWidth;
+    parent.style.height = "100%";
+    var scalew = (parent.offsetWidth - 32) / canvas.width;
+    var scaleh = (parent.offsetHeight - 32) / canvas.height;
     var scale = scalew < scaleh ? scalew : scaleh;
     var w = canvas.width * scale;
     var h = canvas.height * scale;
     canvas.style.width = w + "px";
     canvas.style.height = h + "px";
     var left = parent.offsetWidth / 2 - w / 2;
-    var top = parent.offsetHeight / 2 - h / 2;
+    var top = 16; //parent.offsetHeight / 2 - h / 2;
     canvas.style.left = left;
     canvas.style.top = top;
-    canvas.style.position = "fixed";
+    canvas.style.position = "absolute";
     canvas.style.boxShadow = "0px 0px 32px #000000";
     img.style.width = canvas.style.width;
     img.style.height = canvas.style.height;
