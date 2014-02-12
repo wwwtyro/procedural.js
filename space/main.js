@@ -30,6 +30,7 @@ function init() {
     }
     window.onresize = onResize;
     document.getElementById("random").onclick = randomize;
+    onResize();
 }
 
 function randomize() {
@@ -41,29 +42,26 @@ function randomize() {
 }
 
 function onResize() {
-    if (window.innerWidth / window.innerHeight < canvas.width / canvas.height) {
-        var w = window.innerWidth - 128;
-        var h = w / (canvas.width / canvas.height);
-        img.style.width = "" + w + "px";
-        img.style.height = "" + h + "px";
-        img.style.top = window.innerHeight / 2 - h / 2;
-        img.style.left = window.innerWidth / 2 - w / 2;
-    } else {
-        var h = window.innerHeight - 128;
-        var w = h / (canvas.height / canvas.width);
-        img.style.width = "" + w + "px";
-        img.style.height = "" + h + "px";
-        img.style.top = window.innerHeight / 2 - h / 2;
-        img.style.left = window.innerWidth / 2 - w / 2;
-    }
-    img.style.position = "fixed";
-    img.style.boxShadow = "0px 0px 32px #000000";
-    canvas.style.width = img.style.width;
-    canvas.style.height = img.style.height;
-    canvas.style.top = img.style.top;
-    canvas.style.left = img.style.left;
-    canvas.style.position = img.style.position;
-    canvas.style.boxShadow = img.style.boxShadow;
+    var parent = canvas.parentNode;
+    var scalew = (parent.offsetWidth - 64) / canvas.width;
+    var scaleh = (parent.offsetHeight - 64) / canvas.height;
+    var scale = scalew < scaleh ? scalew : scaleh;
+    var w = canvas.width * scale;
+    var h = canvas.height * scale;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    var left = parent.offsetWidth / 2 - w / 2;
+    var top = parent.offsetHeight / 2 - h / 2;
+    canvas.style.left = left;
+    canvas.style.top = top;
+    canvas.style.position = "fixed";
+    canvas.style.boxShadow = "0px 0px 32px #000000";
+    img.style.width = canvas.style.width;
+    img.style.height = canvas.style.height;
+    img.style.left = canvas.style.left;
+    img.style.top = canvas.style.top;
+    img.style.position = canvas.style.position;
+    img.style.boxShadow = canvas.style.boxShadow;
 }
 
 
