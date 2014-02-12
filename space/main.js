@@ -125,12 +125,12 @@ function nebula() {
 }
 
 function updateOpsDisplay() {
-    var html = "rendering " + ops[0];
+    var html = "Rendering " + ops[0] + "<br>";
     for (var i = 1; i < ops.length; i++) {
         if (ops[i] == "stars" && ops[i - 1] == "stars") {
             continue;
         }
-        html = ops[i] + "<br>" + html;
+        html += ops[i] + "<br>";
     }
     document.getElementById("activity").innerHTML = html;
 }
@@ -138,8 +138,7 @@ function updateOpsDisplay() {
 function render() {
     if (op == undefined) {
         if (ops.length == 0) {
-            document.getElementById("activity").innerHTML = "done";
-            document.getElementById("activity").style.color = "#00FF00";
+            document.getElementById("activity").innerHTML = "Rendering complete";
             canvas.style.display = "none";
             img.style.display = "inline";
             img.src = canvas.toDataURL();
