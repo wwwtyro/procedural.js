@@ -250,6 +250,9 @@ SpaceVista.prototype.update = function() {
     if (done == 1) {
         this.op = undefined;
         this.queueIndex++;
+        if (this.queueIndex > 0 && this.queue[this.queueIndex] != this.queue[this.queueIndex - 1]) {
+            Math.random = Alea(this.seed);
+        }
     }
     return {
         op: this.queue[this.queueIndex],
