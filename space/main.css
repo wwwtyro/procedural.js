@@ -4,24 +4,12 @@ body {
     background: #efefef;
     font-family: sans-serif;
 	font-size: 16px;
-	text-align: right;
 }
 
 #controls {
 	box-sizing: border-box;
-	width: 256px;
+	width: 350px;
 	height: 100%;
 	padding: 16px;
+	overflow: hidden;
 }
-
-/*button {
-	margin: 0px;
-	background: none;
-	color: white;
-	border: 1px solid white;
-	border-radius: 1px;
-	padding: 4px;
-	cursor: pointer;
-	outline: none;
-}
-*/
