@@ -171,7 +171,6 @@ var SpaceVista = function(seed, width, height, renderPointStars, renderStars, re
     Math.random = Alea(this.seed);
     if (renderPointStars) {
         this.renderField();
-        Math.random = Alea(this.seed);
     }
     this.buildQueue();
 }
@@ -185,18 +184,21 @@ SpaceVista.prototype.buildQueue = function() {
     this.queueIndex = 0;
     this.queue = [];
     this.op = undefined;
+    Math.random = Alea(this.seed);
     if (this.renderStars) {
         this.queue.push("star");
         while (Math.random() < 0.95) {
             this.queue.push("star");
         }
     }
+    Math.random = Alea(this.seed);
     if (this.renderNebulae) {
         this.queue.push("nebula");
         while (Math.random() < 0.5) {
             this.queue.push("nebula");
         }
     }
+    Math.random = Alea(this.seed);
     if (this.renderSun) {
         this.queue.push("sun");
     }
@@ -250,7 +252,7 @@ SpaceVista.prototype.update = function() {
     if (done == 1) {
         this.op = undefined;
         this.queueIndex++;
-        if (this.queueIndex > 0 && this.queue[this.queueIndex] != this.queue[this.queueIndex - 1]) {
+        if (this.queue[this.queueIndex] != this.queue[this.queueIndex - 1]) {
             Math.random = Alea(this.seed);
         }
     }
