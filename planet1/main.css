@@ -1,0 +1,13 @@
+
+body {
+    margin: 0px;
+    background: #555555;
+}
+
+#controls {
+	box-sizing: border-box;
+	width: 350px;
+	height: 100%;
+	padding: 16px;
+	overflow: hidden;
+}
