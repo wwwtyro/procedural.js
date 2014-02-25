@@ -11,6 +11,10 @@ var rgba = function(r, g, b, a) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
 };
 
+var randomRGB = function() {
+    return "#" + Math.round(Math.random() * 0xffffff).toString(16)
+}
+
 var normalRGBA = function(x, y, z) {
     return {
         r: x / 2 + 0.5,
@@ -440,7 +444,7 @@ PlanetRenderer.prototype.toDataURL = function(width, height) {
 
 var Controls = function(app) {
     this.seed = randomSeed();
-    this.randomize = function() {
+    this.randomizeSeed = function() {
         this.seed = randomSeed();
         this.render();
     }
@@ -496,7 +500,63 @@ var Controls = function(app) {
     this.renderSprite = function() {
         app.renderSprite();
     }
+
+    this.randomizeAll = function() {
+        this.seed = randomSeed();
+        this.spin = 1;
+        if (Math.random() < 0.5) {
+            this.spin = Math.random() * 7 + 1;
+        }
+
+        this.surfaceiScale = Math.random() * 2;
+        this.surfaceiOctaves = Math.floor(Math.random() * 8 + 1);
+        this.surfaceiFalloff = Math.random() * 3;
+        this.surfaceiIntensity = Math.random() * 3;
+        this.surfaceiRidginess = Math.random();
+        this.surfacesScale = Math.random() * 2;
+        this.surfacesOctaves = Math.floor(Math.random() * 8);
+        this.surfacesFalloff = Math.random() * 3;
+        this.surfacesIntensity = Math.random() * 3;
+
+        this.landColor1 = randomRGB();
+        this.landColor2 = randomRGB();
+        this.landiScale = Math.random() * 2;
+        this.landiOctaves = Math.floor(Math.random() * 8 + 1);
+        this.landiFalloff = Math.random() * 3;
+        this.landiIntensity = Math.random() * 3;
+        this.landiRidginess = Math.random();
+        this.landsScale = Math.random() * 2;
+        this.landsOctaves = Math.floor(Math.random() * 8);
+        this.landsFalloff = Math.random() * 3;
+        this.landsIntensity = Math.random() * 3;
+
+        this.waterDeep = randomRGB();
+        this.waterShallow = randomRGB();
+        this.waterLevel = 0;
+        if (Math.random() < 0.5) {
+            this.waterLevel = Math.random();
+        }
+        this.waterSpecular = Math.random();
+        this.waterFalloff = Math.random() * 3;
+
+        this.cloudColor = randomRGB();
+        this.cloudOpacity = Math.random();
+        this.cloudiScale = Math.random() * 2;
+        this.cloudiOctaves = Math.floor(Math.random() * 8 + 1);;
+        this.cloudiFalloff = Math.random() * 3;
+        this.cloudiIntensity = Math.random() * 3;
+        this.cloudiRidginess = Math.random();
+        this.cloudsScale = Math.random() * 2;
+        this.cloudsOctaves = Math.floor(Math.random() * 8);;
+        this.cloudsFalloff = Math.random() * 3;
+        this.cloudsIntensity = Math.random() * 3;
+        this.normalScale = Math.random() * 0.3;
+        this.render();
+    }
+
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Application                                                                //
@@ -508,58 +568,59 @@ var Application = function() {
         autoPlace: false
     });
     this.gui.add(this.controls, 'seed').listen();
-    this.gui.add(this.controls, 'randomize');
+    this.gui.add(this.controls, 'randomizeSeed').name('randomize seed');
+    this.gui.add(this.controls, 'randomizeAll').name('randomize all');
     this.gui.add(this.controls, 'resolution', [64, 128, 256, 512, 1024, 2048, 4096]);
-    this.gui.add(this.controls, 'spin', 1, 8);
+    this.gui.add(this.controls, 'spin', 1, 8).listen();
     this.gui.surface = this.gui.addFolder('Surface');
     this.gui.surface.noise = this.gui.surface.addFolder('noise');
-    this.gui.surface.noise.add(this.controls, 'surfaceiScale', 0.1, 16).name('scale');
-    this.gui.surface.noise.add(this.controls, 'surfaceiOctaves', 1, 8).step(1).name('octaves');
-    this.gui.surface.noise.add(this.controls, 'surfaceiFalloff', 0, 16).step(0.01).name('falloff');
-    this.gui.surface.noise.add(this.controls, 'surfaceiIntensity', 0, 16).name('intensity');
-    this.gui.surface.noise.add(this.controls, 'surfaceiRidginess', 0, 1).step(0.01).name('ridginess');
-    this.gui.surface.noise.add(this.controls, 'surfacesScale', 0.1, 16).name('smear scale');
-    this.gui.surface.noise.add(this.controls, 'surfacesOctaves', 0, 8).step(1).name('smear octaves');
-    this.gui.surface.noise.add(this.controls, 'surfacesFalloff', 0, 16).step(0.01).name('smear falloff');
-    this.gui.surface.noise.add(this.controls, 'surfacesIntensity', 0, 16).name('smear intensity');
+    this.gui.surface.noise.add(this.controls, 'surfaceiScale', 0.1, 16).name('scale').listen();
+    this.gui.surface.noise.add(this.controls, 'surfaceiOctaves', 1, 8).step(1).name('octaves').listen();
+    this.gui.surface.noise.add(this.controls, 'surfaceiFalloff', 0, 16).step(0.01).name('falloff').listen();
+    this.gui.surface.noise.add(this.controls, 'surfaceiIntensity', 0, 16).name('intensity').listen();
+    this.gui.surface.noise.add(this.controls, 'surfaceiRidginess', 0, 1).step(0.01).name('ridginess').listen();
+    this.gui.surface.noise.add(this.controls, 'surfacesScale', 0.1, 16).name('smear scale').listen();
+    this.gui.surface.noise.add(this.controls, 'surfacesOctaves', 0, 8).step(1).name('smear octaves').listen();
+    this.gui.surface.noise.add(this.controls, 'surfacesFalloff', 0, 16).step(0.01).name('smear falloff').listen();
+    this.gui.surface.noise.add(this.controls, 'surfacesIntensity', 0, 16).name('smear intensity').listen();
 
     this.gui.land = this.gui.addFolder('Land');
     this.gui.land.noise = this.gui.land.addFolder('noise');
-    this.gui.land.noise.add(this.controls, 'landiScale', 0.1, 16).name('scale');
-    this.gui.land.noise.add(this.controls, 'landiOctaves', 1, 8).step(1).name('octaves');
-    this.gui.land.noise.add(this.controls, 'landiFalloff', 0, 16).step(0.01).name('falloff');
-    this.gui.land.noise.add(this.controls, 'landiIntensity', 0, 16).name('intensity');
-    this.gui.land.noise.add(this.controls, 'landiRidginess', 0, 1).step(0.01).name('ridginess');
-    this.gui.land.noise.add(this.controls, 'landsScale', 0.1, 16).name('smear scale');
-    this.gui.land.noise.add(this.controls, 'landsOctaves', 0, 8).step(1).name('smear octaves');
-    this.gui.land.noise.add(this.controls, 'landsFalloff', 0, 16).step(0.01).name('smear falloff');
-    this.gui.land.noise.add(this.controls, 'landsIntensity', 0, 16).name('smear intensity');
-    this.gui.land.addColor(this.controls, 'landColor1').name('color 1');
-    this.gui.land.addColor(this.controls, 'landColor2').name('color 2');
+    this.gui.land.noise.add(this.controls, 'landiScale', 0.1, 16).name('scale').listen();
+    this.gui.land.noise.add(this.controls, 'landiOctaves', 1, 8).step(1).name('octaves').listen();
+    this.gui.land.noise.add(this.controls, 'landiFalloff', 0, 16).step(0.01).name('falloff').listen();
+    this.gui.land.noise.add(this.controls, 'landiIntensity', 0, 16).name('intensity').listen();
+    this.gui.land.noise.add(this.controls, 'landiRidginess', 0, 1).step(0.01).name('ridginess').listen();
+    this.gui.land.noise.add(this.controls, 'landsScale', 0.1, 16).name('smear scale').listen();
+    this.gui.land.noise.add(this.controls, 'landsOctaves', 0, 8).step(1).name('smear octaves').listen();
+    this.gui.land.noise.add(this.controls, 'landsFalloff', 0, 16).step(0.01).name('smear falloff').listen();
+    this.gui.land.noise.add(this.controls, 'landsIntensity', 0, 16).name('smear intensity').listen();
+    this.gui.land.addColor(this.controls, 'landColor1').name('color 1').listen();
+    this.gui.land.addColor(this.controls, 'landColor2').name('color 2').listen();
 
     this.gui.water = this.gui.addFolder('Water')
-    this.gui.water.addColor(this.controls, 'waterDeep').name("deep");
-    this.gui.water.addColor(this.controls, 'waterShallow').name('shallow');
-    this.gui.water.add(this.controls, 'waterLevel', 0.0, 1.0).name('level');
-    this.gui.water.add(this.controls, 'waterSpecular', 0.0, 1.0).name('specular');
-    this.gui.water.add(this.controls, 'waterFalloff', 0.1, 16).name('falloff');
+    this.gui.water.addColor(this.controls, 'waterDeep').name("deep").listen();
+    this.gui.water.addColor(this.controls, 'waterShallow').name('shallow').listen();
+    this.gui.water.add(this.controls, 'waterLevel', 0.0, 1.0).name('level').listen();
+    this.gui.water.add(this.controls, 'waterSpecular', 0.0, 1.0).name('specular').listen();
+    this.gui.water.add(this.controls, 'waterFalloff', 0.1, 16).name('falloff').listen();
 
     this.gui.clouds = this.gui.addFolder('Clouds');
     this.gui.clouds.noise = this.gui.clouds.addFolder('noise');
-    this.gui.clouds.noise.add(this.controls, 'cloudiScale', 0.1, 16).name('scale');
-    this.gui.clouds.noise.add(this.controls, 'cloudiOctaves', 1, 8).step(1).name('octaves');
-    this.gui.clouds.noise.add(this.controls, 'cloudiFalloff', 0, 16).step(0.01).name('falloff');
-    this.gui.clouds.noise.add(this.controls, 'cloudiIntensity', 0, 16).name('intensity');
-    this.gui.clouds.noise.add(this.controls, 'cloudiRidginess', 0, 1).step(0.01).name('ridginess');
-    this.gui.clouds.noise.add(this.controls, 'cloudsScale', 0.1, 16).name('smear scale');
-    this.gui.clouds.noise.add(this.controls, 'cloudsOctaves', 0, 8).step(1).name('smear octaves');
-    this.gui.clouds.noise.add(this.controls, 'cloudsFalloff', 0, 16).step(0.01).name('smear falloff');
-    this.gui.clouds.noise.add(this.controls, 'cloudsIntensity', 0, 16).name('smear intensity');
-    this.gui.clouds.addColor(this.controls, 'cloudColor').name('color');
-    this.gui.clouds.add(this.controls, 'cloudOpacity', 0.0, 1.0).name('opacity');
+    this.gui.clouds.noise.add(this.controls, 'cloudiScale', 0.1, 16).name('scale').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudiOctaves', 1, 8).step(1).name('octaves').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudiFalloff', 0, 16).step(0.01).name('falloff').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudiIntensity', 0, 16).name('intensity').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudiRidginess', 0, 1).step(0.01).name('ridginess').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudsScale', 0.1, 16).name('smear scale').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudsOctaves', 0, 8).step(1).name('smear octaves').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudsFalloff', 0, 16).step(0.01).name('smear falloff').listen();
+    this.gui.clouds.noise.add(this.controls, 'cloudsIntensity', 0, 16).name('smear intensity').listen();
+    this.gui.clouds.addColor(this.controls, 'cloudColor').name('color').listen();
+    this.gui.clouds.add(this.controls, 'cloudOpacity', 0.0, 1.0).name('opacity').listen();
 
     this.gui.add(this.controls, 'render');
-    this.gui.add(this.controls, "normalScale", 0, 0.3).step(0.01).name('normal scale').onChange(function() {
+    this.gui.add(this.controls, "normalScale", 0, 0.3).step(0.01).listen().name('normal scale').onChange(function() {
         this.planetRenderer.setNormalScale(this.controls.normalScale);
     }.bind(this));
     this.gui.add(this.controls, 'animate');
@@ -628,6 +689,7 @@ Application.prototype.construct = function() {
         sIntensity: this.controls.cloudsIntensity,
     });
 
+    console.log(this.controls.resolution);
     this.planetTexture = new PlanetTexture({
         width: parseInt(this.controls.resolution),
         waterDeep: datColor(this.controls.waterDeep),
