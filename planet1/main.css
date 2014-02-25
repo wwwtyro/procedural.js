@@ -1,13 +1,11 @@
 
 body {
     margin: 0px;
-    background: #555555;
-}
-
-#controls {
-	box-sizing: border-box;
-	width: 350px;
-	height: 100%;
-	padding: 16px;
-	overflow: hidden;
+    background: #7f7f7f;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
